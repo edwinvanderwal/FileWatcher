@@ -1,14 +1,21 @@
 package com.edwinvanderwal.filewatcher.config;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.integration.ip.tcp.TcpReceivingChannelAdapter;
 import org.springframework.integration.ip.tcp.connection.TcpNetClientConnectionFactory;
 import org.springframework.integration.ip.tcp.serializer.ByteArrayLfSerializer;
-import org.springframework.integration.ip.tcp.serializer.ByteArraySingleTerminatorSerializer;
 
 @Configuration
 public class TcpConfiguration {
+
+    @Value("${tcp.server.port}")
+    private int port;
+
+    @Value("${tcp.server.host}")
+    private String host;
+
 
     @Bean
     public TcpReceivingChannelAdapter demoTcpReceivingChannelAdapter() {
@@ -21,7 +28,7 @@ public class TcpConfiguration {
 
     private TcpNetClientConnectionFactory prepareTcpNetClientConnectionFactory(){
         TcpNetClientConnectionFactory factory =
-                new TcpNetClientConnectionFactory("localhost", 10000);
+                new TcpNetClientConnectionFactory(host, port);
         factory.setDeserializer(new ByteArrayLfSerializer());
         return factory;
     }
