@@ -27,7 +27,7 @@ public class DeelnemerService {
     }
 
     public List<Deelnemer> getDeelnemerByChipCode(String chipcode) {
-        return deelnemerRepo.findByChipcode(chipcode);
+        return deelnemerRepo.findByChipcodeIgnoreCase(chipcode);
     }
 
 }

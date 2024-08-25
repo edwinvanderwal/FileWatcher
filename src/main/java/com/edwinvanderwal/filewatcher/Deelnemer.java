@@ -19,5 +19,13 @@ public class Deelnemer {
     private String naam;
     private String startnummer;
     private String chipcode;
+    private String vereniging;
+    private String woonplaats;
+    private String onderdeel;
+    
+    @Override
+    public String toString() {
+        return "" + startnummer + " " + naam + " " + vereniging + " " + woonplaats + " " + onderdeel + "";
+    }
 
 }

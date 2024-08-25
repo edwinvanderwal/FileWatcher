@@ -6,6 +6,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface DeelnemerRepo extends JpaRepository<Deelnemer, Long> {
 
-    List<Deelnemer> findByChipcode(String chipcode);
+    List<Deelnemer> findByChipcodeIgnoreCase(String chipcode);
 
 }

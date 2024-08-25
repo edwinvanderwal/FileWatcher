@@ -2,33 +2,49 @@ package com.edwinvanderwal.filewatcher.service;
 
 import java.util.List;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.integration.annotation.MessageEndpoint;
 import org.springframework.integration.annotation.ServiceActivator;
 
 import com.edwinvanderwal.filewatcher.Deelnemer;
 
+import lombok.extern.slf4j.Slf4j;
+
+/**
+ * Example chipcode                                  aa0005800385e07f00012408141913055def
+ *         fixed prefix (per Ipico machine?)         aa00 
+ *         chipcode                                      05800385e07f
+ *         identification of mat?                                    0001          
+ *         date                                                          240814
+ *         time                                                                1913055
+ *         checksum? (sum al bits from 2 to 34 ?)                                     def   
+ */ 
+
 @MessageEndpoint
+@Slf4j
 public class IpicoMessageService {
-     private Logger logger = LoggerFactory.getLogger(IpicoMessageService.class);
 
     private DeelnemerService deelnemerService;
 
-    public IpicoMessageService(DeelnemerService deelnemerService) {
+    private LedBoardService ledBoardService;
+
+    public IpicoMessageService(DeelnemerService deelnemerService, LedBoardService ledBoardService) {
         this.deelnemerService = deelnemerService;
+        this.ledBoardService = ledBoardService;
     }
 
     @ServiceActivator(inputChannel = "server-channel")
     public void consume(byte[] bytes) {
         String chipRead = new String(bytes);
-        logger.info(chipRead);
+        //logger.info(chipRead);
         if (!chipRead.isEmpty()) {
             String chipCode = chipRead.substring(4,16);
             List<Deelnemer> deelnemers = deelnemerService.getDeelnemerByChipCode(chipCode);
-            logger.info(chipCode);
+            log.info("Deelnemers {} gevonden bij {}", deelnemers.size(), chipCode);
             if (!deelnemers.isEmpty()) {
-                logger.info(String.format("%s  %s", deelnemers.get(0).getStartnummer(), deelnemers.get(0).getNaam()));
+                ledBoardService.handleMessage(deelnemers.get(0).toString());
+                System.out.println(deelnemers.get(0));
+            } else {
+                ledBoardService.handleMessage(chipCode);
             }
         }
         
