@@ -39,7 +39,7 @@ public class IpicoMessageService {
         if (!chipRead.isEmpty()) {
             String chipCode = chipRead.substring(4,16);
             List<Deelnemer> deelnemers = deelnemerService.getDeelnemerByChipCode(chipCode);
-            log.info("Deelnemers {} gevonden bij {}", deelnemers.size(), chipCode);
+            //log.info("Deelnemers {} gevonden bij {}", deelnemers.size(), chipCode);
             if (!deelnemers.isEmpty()) {
                 ledBoardService.handleMessage(deelnemers.get(0).toString());
                 System.out.println(deelnemers.get(0));
