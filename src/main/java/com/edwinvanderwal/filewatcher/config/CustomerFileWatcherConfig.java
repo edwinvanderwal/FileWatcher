@@ -1,6 +1,8 @@
 package com.edwinvanderwal.filewatcher.config;
 
+import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.time.Duration;
 
 import org.slf4j.Logger;
@@ -42,10 +44,16 @@ public class CustomerFileWatcherConfig {
         fileSystemWatcher.addListener(
             new CustomerAddFileChangeListener(fileProcessor));
         // fileSystemWatcher.setTriggerFilter(
-        //     f -> f.toPath().endsWith(".json"));        
+        //      f -> f.toPath().endsWith(".json"));        
         fileSystemWatcher.start();
         logger.info(String.format("FileSystemWatcher initialized.Monitoring directory %s",properties.directory()));
-
+        if (Files.exists(Paths.get(properties.directory() + "deelnemers.json"))) {
+            System.out.println("alread a file!!!");
+            fileProcessor.process(Paths.get(properties.directory() + "deelnemers.json"));
+        } else {
+            System.out.println("no init file!!!");
+        }
+        
         return fileSystemWatcher;
     }
 

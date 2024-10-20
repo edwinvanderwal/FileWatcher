@@ -39,6 +39,7 @@ public class LedBoardService {
             log.debug("Connecting to {} and port", host, port);
             clientSocket = new Socket("10.19.1.60", 21967);
             out = new DataOutputStream(clientSocket.getOutputStream());
+            handleMessage("Welkom hardlopers!");
         } catch (UnknownHostException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();

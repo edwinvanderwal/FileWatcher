@@ -40,8 +40,6 @@ public class JsonFileProcessor implements FileProcessor {
         moveFile(file);
     }
 
-   
-
     private void parseJson(String jsonString) {
        ObjectMapper om = new ObjectMapper();
     try {

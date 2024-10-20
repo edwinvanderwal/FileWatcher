@@ -25,7 +25,7 @@ public class Deelnemer {
     
     @Override
     public String toString() {
-        return "" + startnummer + " " + naam + " " + vereniging + " " + woonplaats + " " + onderdeel + "";
+        return "" + startnummer + "" + naam + " " + vereniging + " " + woonplaats + " " + onderdeel + "";
     }
 
 }
