@@ -163,9 +163,9 @@ public class LedBoardService {
         for (int i = 0; i < byteArray.length; i++) {          
             sum += byteArray[i];
         }
-        System.out.println("sum " + sum );
+        //System.out.println("sum " + sum );
         sum = (byte) (sum & bit7);
-        System.out.println("sum " + sum );
+        //System.out.println("sum " + sum );
         byte[] checkSumBute = {sum};
         return checkSumBute;
     }
