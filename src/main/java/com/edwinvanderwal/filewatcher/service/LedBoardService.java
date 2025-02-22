@@ -9,7 +9,10 @@ import java.net.UnknownHostException;
 import org.apache.commons.codec.binary.Hex;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.integration.annotation.ServiceActivator;
+import org.springframework.integration.ip.tcp.TcpSendingMessageHandler;
 import org.springframework.stereotype.Component;
+
+import com.edwinvanderwal.filewatcher.config.LedBoardConfig;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -21,11 +24,6 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class LedBoardService {
 
-    @Value("${ledboard.port}")
-    private int port;
-
-    @Value("${ledboard.host}")
-    private String host;
 
     private Socket clientSocket;
     private DataOutputStream out;
@@ -34,10 +32,10 @@ public class LedBoardService {
     private String row1 = "";
     private String row2 = "";
 
-    public LedBoardService() {
+    public LedBoardService(final LedBoardConfig ledBoardConfig, final TcpSendingMessageHandler tcpOut) {
         try {
-            log.debug("Connecting to {} and port", host, port);
-            clientSocket = new Socket(host, port);
+            log.info("Connecting to {} and port", ledBoardConfig.getHost(), ledBoardConfig.getPort());
+            clientSocket = new Socket(ledBoardConfig.getHost(), ledBoardConfig.getPort());
             out = new DataOutputStream(clientSocket.getOutputStream());
             handleMessage("Welkom hardlopers!");
         } catch (UnknownHostException e) {

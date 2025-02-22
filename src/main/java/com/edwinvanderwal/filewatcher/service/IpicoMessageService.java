@@ -17,6 +17,9 @@ import lombok.extern.slf4j.Slf4j;
  *         date                                                          240814
  *         time                                                                1913055
  *         checksum? (sum al bits from 2 to 34 ?)                                     def   
+ * 
+ *    See https://stackoverflow.com/questions/56602415/how-to-dynamically-create-multiple-tcpoutboundgateways-using-spring-integration
+ * 
  */ 
 
 @MessageEndpoint
