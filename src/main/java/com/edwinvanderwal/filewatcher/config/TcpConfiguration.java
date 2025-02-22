@@ -15,6 +15,7 @@ import org.springframework.integration.ip.tcp.connection.AbstractServerConnectio
 import org.springframework.integration.ip.tcp.connection.TcpNetClientConnectionFactory;
 import org.springframework.integration.ip.tcp.connection.TcpNetServerConnectionFactory;
 import org.springframework.integration.ip.tcp.serializer.ByteArrayLfSerializer;
+import org.springframework.integration.ip.tcp.serializer.ByteArrayRawSerializer;
 import org.springframework.integration.ip.tcp.serializer.ByteArrayStxEtxSerializer;
 
 import lombok.RequiredArgsConstructor;
@@ -53,15 +54,15 @@ public class TcpConfiguration {
     private TcpNetClientConnectionFactory prepareTcpNetClientConnectionFactory(){
         TcpNetClientConnectionFactory factory =
                 new TcpNetClientConnectionFactory(host, port);
-        factory.setDeserializer(new ByteArrayLfSerializer());
+        factory.setDeserializer(new ByteArrayRawSerializer());
         return factory;
     }
 
    @Bean
 	public AbstractClientConnectionFactory clientFactory() {
 		AbstractClientConnectionFactory factory = new TcpNetClientRetryConnectionFactory(tcpProperties);
-		//factory.setSerializer(new ByteArrayStxEtxSerializer());
-		//factory.setDeserializer(new ByteArrayStxEtxSerializer());
+        factory.setSerializer(new ByteArrayRawSerializer() );
+        factory.setDeserializer(new ByteArrayRawSerializer());
 		factory.setLeaveOpen(true);
 
 		return factory;
