@@ -48,6 +48,7 @@ public class IpicoMessageService {
                 System.out.println(deelnemers.get(0));
             } else {
                 ledBoardService.handleMessage(chipCode);
+                System.out.println(chipCode);
             }
         }
         

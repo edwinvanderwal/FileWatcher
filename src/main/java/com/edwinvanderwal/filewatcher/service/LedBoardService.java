@@ -7,13 +7,15 @@ import java.net.Socket;
 import java.net.UnknownHostException;
 
 import org.apache.commons.codec.binary.Hex;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.integration.annotation.ServiceActivator;
 import org.springframework.integration.ip.tcp.TcpSendingMessageHandler;
 import org.springframework.stereotype.Component;
 
-import com.edwinvanderwal.filewatcher.config.LedBoardConfig;
+import com.edwinvanderwal.filewatcher.config.TcpConfiguration.TcpClientGateway;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -24,34 +26,21 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class LedBoardService {
 
-
-    private Socket clientSocket;
     private DataOutputStream out;
 
     private String row0 = "";
     private String row1 = "";
     private String row2 = "";
 
-    public LedBoardService(final LedBoardConfig ledBoardConfig, final TcpSendingMessageHandler tcpOut) {
-        try {
-            log.info("Connecting to {} and port", ledBoardConfig.getHost(), ledBoardConfig.getPort());
-            clientSocket = new Socket(ledBoardConfig.getHost(), ledBoardConfig.getPort());
-            out = new DataOutputStream(clientSocket.getOutputStream());
-            handleMessage("Welkom hardlopers!");
-        } catch (UnknownHostException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        } catch (IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-        
+    private final TcpClientGateway tcpClientGateway;
+
+    public LedBoardService(TcpClientGateway tcpClientGateway)  {
+        this.tcpClientGateway = tcpClientGateway;
     }
 
-    @ServiceActivator(outputChannel = "toLedBoard")
     public byte[] handleMessage(String msg) {
         try {
-            if (out != null) {
+            if (tcpClientGateway != null) {
             // set rows down
             row2 = row1;
             row1 = row0;
@@ -59,14 +48,14 @@ public class LedBoardService {
             
             // reset board
             byte[] c = createByteArray(true,0, "");
-            out.write(c);
+            tcpClientGateway.send(c);
 
             c = createByteArray(false, 0, row0);
-            out.write(c);
+            tcpClientGateway.send(c);
             c = createByteArray(false, 1, row1);
-            out.write(c);
+            tcpClientGateway.send(c);
             c = createByteArray(false, 2, row2);
-            out.write(c);
+            tcpClientGateway.send(c);
             }
         } catch (IOException e) {
             // TODO Auto-generated catch block
