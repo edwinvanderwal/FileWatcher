@@ -12,17 +12,19 @@ import org.springframework.integration.ip.tcp.TcpSendingMessageHandler;
 import org.springframework.integration.ip.tcp.connection.TcpNetClientConnectionFactory;
 import org.springframework.integration.ip.tcp.serializer.ByteArrayLfSerializer;
 
+import lombok.Getter;
+
 @Configuration
 public class LedBoardConfig {
 
     @Value("${ledboard.port}")
+    @Getter
     private int port;
 
     @Value("${ledboard.host}")
+    @Getter
     private String host;
 
-     private Socket clientSocket;
-    private PrintWriter out;
 
 
     
