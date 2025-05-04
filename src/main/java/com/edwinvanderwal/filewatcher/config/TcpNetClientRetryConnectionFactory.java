@@ -18,6 +18,16 @@ public class TcpNetClientRetryConnectionFactory extends TcpNetClientConnectionFa
 		this.tcpProperties = tcpProperties;
 	}
 
+	public Socket getSocket(){
+		try {
+			return createSocket(tcpProperties.getServerHost(), tcpProperties.getServerPort());
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
+	}
+
 	@Override
 	protected @NonNull Socket createSocket(@NonNull String host, int port) throws IOException {
 		Socket socket = null;

@@ -32,7 +32,7 @@ public class IpicoMessageService {
 
     public IpicoMessageService(DeelnemerService deelnemerService, LedBoardService ledBoardService) {
         this.deelnemerService = deelnemerService;
-        this.ledBoardService = ledBoardService;
+        this.ledBoardService = ledBoardService; 
     }
 
     @ServiceActivator(inputChannel = "server-channel")

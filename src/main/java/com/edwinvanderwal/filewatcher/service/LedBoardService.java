@@ -4,6 +4,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
+import java.net.SocketException;
 import java.net.UnknownHostException;
 
 import org.apache.commons.codec.binary.Hex;
@@ -11,9 +12,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.integration.annotation.ServiceActivator;
 import org.springframework.integration.ip.tcp.TcpSendingMessageHandler;
+import org.springframework.integration.ip.tcp.connection.AbstractClientConnectionFactory;
 import org.springframework.stereotype.Component;
 
-import com.edwinvanderwal.filewatcher.config.TcpConfiguration.TcpClientGateway;
+import com.edwinvanderwal.filewatcher.config.TcpConfiguration;
+import com.edwinvanderwal.filewatcher.config.TcpNetClientRetryConnectionFactory;
+import com.edwinvanderwal.filewatcher.config.TcpProperties;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -26,40 +30,81 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class LedBoardService {
 
+    private Socket clientSocket;
     private DataOutputStream out;
+    private TcpNetClientRetryConnectionFactory factory;
 
     private String row0 = "";
     private String row1 = "";
     private String row2 = "";
 
-    private final TcpClientGateway tcpClientGateway;
+    public LedBoardService(final TcpProperties tcpProperties) {
+        factory = new TcpNetClientRetryConnectionFactory(tcpProperties);
+        connectToSocket();
+    }
 
-    public LedBoardService(TcpClientGateway tcpClientGateway)  {
-        this.tcpClientGateway = tcpClientGateway;
+    private void connectToSocket() {
+        try {
+            clientSocket = factory.getSocket();
+            out = new DataOutputStream(clientSocket.getOutputStream());
+            log.info("Connected to the socket successfully.");
+        } catch (IOException e) {
+            log.error("Failed to connect to the socket: {}", e.getMessage());
+            retryConnection();
+        }
+    }
+
+    private void retryConnection() {
+        int retryCount = 0;
+        int maxRetries = 5;
+        int retryDelay = 2000; // 2 seconds
+
+        while (retryCount < maxRetries) {
+            try {
+                log.info("Attempting to reconnect... (Attempt {}/{})", retryCount + 1, maxRetries);
+                clientSocket = factory.getSocket();
+                out = new DataOutputStream(clientSocket.getOutputStream());
+                log.info("Reconnected successfully.");
+                return;
+            } catch (IOException e) {
+                retryCount++;
+                log.error("Reconnect attempt failed: {}", e.getMessage());
+                try {
+                    Thread.sleep(retryDelay);
+                } catch (InterruptedException ie) {
+                    Thread.currentThread().interrupt();
+                    log.error("Retry interrupted: {}", ie.getMessage());
+                    break;
+                }
+            }
+        }
+
+        log.error("Failed to reconnect after {} attempts.", maxRetries);
     }
 
     public byte[] handleMessage(String msg) {
         try {
-            if (tcpClientGateway != null) {
-            // set rows down
-            row2 = row1;
-            row1 = row0;
-            row0 = msg;
-            
-            // reset board
-            byte[] c = createByteArray(true,0, "");
-            tcpClientGateway.send(c);
+            if (out != null) {
+                // set rows down
+                row2 = row1;
+                row1 = row0;
+                row0 = msg;
 
-            c = createByteArray(false, 0, row0);
-            tcpClientGateway.send(c);
-            c = createByteArray(false, 1, row1);
-            tcpClientGateway.send(c);
-            c = createByteArray(false, 2, row2);
-            tcpClientGateway.send(c);
+                // reset board
+                byte[] c = createByteArray(true, 0, "");
+                out.write(c);
+
+                c = createByteArray(false, 0, row0);
+                out.write(c);
+                c = createByteArray(false, 1, row1);
+                out.write(c);
+                c = createByteArray(false, 2, row2);
             }
+        } catch (SocketException e) {
+            log.error("SocketException occurred: {}", e.getMessage());
+            retryConnection();
         } catch (IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            log.error("IOException occurred: {}", e.getMessage());
         }
         return null;
     }

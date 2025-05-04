@@ -54,37 +54,37 @@ public class TcpConfiguration {
     private TcpNetClientConnectionFactory prepareTcpNetClientConnectionFactory(){
         TcpNetClientConnectionFactory factory =
                 new TcpNetClientConnectionFactory(host, port);
-        factory.setDeserializer(new ByteArrayRawSerializer());
+            factory.setDeserializer(new ByteArrayLfSerializer());
         return factory;
     }
 
-   @Bean
-	public AbstractClientConnectionFactory clientFactory() {
-		AbstractClientConnectionFactory factory = new TcpNetClientRetryConnectionFactory(tcpProperties);
-        factory.setSerializer(new ByteArrayRawSerializer() );
-        factory.setDeserializer(new ByteArrayRawSerializer());
-		factory.setLeaveOpen(true);
+//    @Bean
+// 	public AbstractClientConnectionFactory clientFactory() {
+// 		AbstractClientConnectionFactory factory = new TcpNetClientRetryConnectionFactory(tcpProperties);
+//         factory.setSerializer(new ByteArrayRawSerializer() );
+//         factory.setDeserializer(new ByteArrayRawSerializer());
+// 		factory.setLeaveOpen(true);
 
-		return factory;
-	}
+// 		return factory;
+// 	}
 
-    @Bean
-	@ServiceActivator(inputChannel = MESSAGE_CHANNEL)
-	public TcpOutboundGateway outboundGateway(AbstractClientConnectionFactory clientFactory) {
-		TcpOutboundGateway outboundGateway = new TcpOutboundGateway();
-		outboundGateway.setConnectionFactory(clientFactory);
-		outboundGateway.setLoggingEnabled(true);
-		outboundGateway.setRequiresReply(false);
+    // @Bean
+	// @ServiceActivator(inputChannel = MESSAGE_CHANNEL)
+	// public TcpOutboundGateway outboundGateway(AbstractClientConnectionFactory clientFactory) {
+	// 	TcpOutboundGateway outboundGateway = new TcpOutboundGateway();
+	// 	outboundGateway.setConnectionFactory(clientFactory);
+	// 	outboundGateway.setLoggingEnabled(true);
+	// 	outboundGateway.setRequiresReply(false);
 
-		return outboundGateway;
-	}
+	// 	return outboundGateway;
+	// }
 
-    @MessagingGateway
-	public interface TcpClientGateway {
+    // @MessagingGateway
+	// public interface TcpClientGateway {
 
-		@Gateway(requestChannel = MESSAGE_CHANNEL, replyTimeout = 1)
-		void send(byte[] payload);
-	}
+	// 	@Gateway(requestChannel = MESSAGE_CHANNEL, replyTimeout = 1)
+	// 	void send(byte[] payload);
+	// }
 
     
 
