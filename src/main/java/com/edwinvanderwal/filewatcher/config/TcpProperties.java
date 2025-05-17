@@ -17,4 +17,10 @@ public class TcpProperties {
 
 	@Value("${connection.retry.interval:10}")
 	private int connectionRetryInterval;
+
+	@Value("${ledboard.welcomeMessage:Welkom hardlopers!}")
+    private String welcomeMessage;
+
+	@Value("${ledboard.simulation:false}")
+	private boolean simulation;
 }

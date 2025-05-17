@@ -39,8 +39,11 @@ public class LedBoardService {
     private String row2 = "";
 
     public LedBoardService(final TcpProperties tcpProperties) {
-        factory = new TcpNetClientRetryConnectionFactory(tcpProperties);
-        connectToSocket();
+        if (!tcpProperties.isSimulation()){
+            factory = new TcpNetClientRetryConnectionFactory(tcpProperties);
+            connectToSocket();
+            handleMessage(tcpProperties.getWelcomeMessage());
+        }
     }
 
     private void connectToSocket() {
@@ -65,6 +68,7 @@ public class LedBoardService {
                 clientSocket = factory.getSocket();
                 out = new DataOutputStream(clientSocket.getOutputStream());
                 log.info("Reconnected successfully.");
+                handleMessage("We hebben weer verbinding met de ledboard.");
                 return;
             } catch (IOException e) {
                 retryCount++;
@@ -99,6 +103,7 @@ public class LedBoardService {
                 c = createByteArray(false, 1, row1);
                 out.write(c);
                 c = createByteArray(false, 2, row2);
+                out.write(c);
             }
         } catch (SocketException e) {
             log.error("SocketException occurred: {}", e.getMessage());

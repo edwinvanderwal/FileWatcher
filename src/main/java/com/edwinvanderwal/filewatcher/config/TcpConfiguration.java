@@ -58,34 +58,6 @@ public class TcpConfiguration {
         return factory;
     }
 
-//    @Bean
-// 	public AbstractClientConnectionFactory clientFactory() {
-// 		AbstractClientConnectionFactory factory = new TcpNetClientRetryConnectionFactory(tcpProperties);
-//         factory.setSerializer(new ByteArrayRawSerializer() );
-//         factory.setDeserializer(new ByteArrayRawSerializer());
-// 		factory.setLeaveOpen(true);
-
-// 		return factory;
-// 	}
-
-    // @Bean
-	// @ServiceActivator(inputChannel = MESSAGE_CHANNEL)
-	// public TcpOutboundGateway outboundGateway(AbstractClientConnectionFactory clientFactory) {
-	// 	TcpOutboundGateway outboundGateway = new TcpOutboundGateway();
-	// 	outboundGateway.setConnectionFactory(clientFactory);
-	// 	outboundGateway.setLoggingEnabled(true);
-	// 	outboundGateway.setRequiresReply(false);
-
-	// 	return outboundGateway;
-	// }
-
-    // @MessagingGateway
-	// public interface TcpClientGateway {
-
-	// 	@Gateway(requestChannel = MESSAGE_CHANNEL, replyTimeout = 1)
-	// 	void send(byte[] payload);
-	// }
-
     
 
 }
