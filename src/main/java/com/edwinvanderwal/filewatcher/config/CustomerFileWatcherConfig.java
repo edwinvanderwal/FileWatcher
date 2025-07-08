@@ -1,5 +1,6 @@
 package com.edwinvanderwal.filewatcher.config;
 
+import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -51,6 +52,9 @@ public class CustomerFileWatcherConfig {
         if (Files.exists(Paths.get(properties.directory() + "Deelnemers.json"))) {
             System.out.println("alread a file!!!");
             fileProcessor.process(Paths.get(properties.directory() + "Deelnemers.json"));
+        } else if (Files.exists(Paths.get(properties.directory() + "output" + File.pathSeparator + "Deelnemers.json"))) {
+            System.out.println("alread a file in output folder!!!");
+            fileProcessor.process(Paths.get(properties.directory() + "output" + File.pathSeparator + "Deelnemers.json"));
         } else {
             System.out.println("no init file!!!");
         }
