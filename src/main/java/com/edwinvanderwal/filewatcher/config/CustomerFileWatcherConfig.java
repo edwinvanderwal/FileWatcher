@@ -49,12 +49,12 @@ public class CustomerFileWatcherConfig {
         //      f -> f.toPath().endsWith(".json"));        
         fileSystemWatcher.start();
         logger.info(String.format("FileSystemWatcher initialized.Monitoring directory %s",properties.directory()));
-        if (Files.exists(Paths.get(properties.directory() + "Deelnemers.json"))) {
+        if (Files.exists(Paths.get(properties.directory(),"Deelnemers.json"))) {
             System.out.println("alread a file!!!");
-            fileProcessor.process(Paths.get(properties.directory() + "Deelnemers.json"));
-        } else if (Files.exists(Paths.get(properties.directory() + "output" + File.pathSeparator + "Deelnemers.json"))) {
+            fileProcessor.process(Paths.get(properties.directory(), "Deelnemers.json"));
+        } else if (Files.exists(Paths.get(properties.directory() , "output" , "Deelnemers.json"))) {
             System.out.println("alread a file in output folder!!!");
-            fileProcessor.process(Paths.get(properties.directory() + "output" + File.pathSeparator + "Deelnemers.json"));
+            fileProcessor.process(Paths.get(properties.directory() , "output" , "Deelnemers.json"));
         } else {
             System.out.println("no init file!!!");
         }
