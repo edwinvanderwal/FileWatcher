@@ -25,8 +25,10 @@ public class CustomerAddFileChangeListener implements FileChangeListener {
     public void onChange(Set<ChangedFiles> changeSet) {
         logger.debug("File changed");
         for(ChangedFiles files : changeSet)
-            for(ChangedFile file: files.getFiles())
+            for(ChangedFile file: files.getFiles()) {
+                logger.info("{} {}", file.getFile().getAbsolutePath() , file.getType());
                 if (file.getType().equals(ChangedFile.Type.ADD))
                     fileProcessor.process(file.getFile().toPath());
+            }
     }
 }

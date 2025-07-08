@@ -43,6 +43,7 @@ public class CustomerFileWatcherConfig {
             Path.of(properties.directory()).toFile());
         fileSystemWatcher.addListener(
             new CustomerAddFileChangeListener(fileProcessor));
+        
         // fileSystemWatcher.setTriggerFilter(
         //      f -> f.toPath().endsWith(".json"));        
         fileSystemWatcher.start();
