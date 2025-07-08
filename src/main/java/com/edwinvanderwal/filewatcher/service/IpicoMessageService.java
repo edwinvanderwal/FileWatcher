@@ -39,7 +39,8 @@ public class IpicoMessageService {
     public void consume(byte[] bytes) {
         String chipRead = new String(bytes);
         //logger.info(chipRead);
-        if (!chipRead.isEmpty()) {
+        // FIXME startbutton pressed the string is shorter.
+        if (!chipRead.isEmpty() && chipRead.length() > 16) {
             String chipCode = chipRead.substring(4,16);
             List<Deelnemer> deelnemers = deelnemerService.getDeelnemerByChipCode(chipCode);
             //log.info("Deelnemers {} gevonden bij {}", deelnemers.size(), chipCode);
@@ -50,6 +51,8 @@ public class IpicoMessageService {
                 ledBoardService.handleMessage(chipCode);
                 System.out.println(chipCode);
             }
+        } else {
+            ledBoardService.handleMessage("Start button pressed");
         }
         
     }

@@ -17,7 +17,7 @@ import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 
 @Component
 public class JsonFileProcessor implements FileProcessor {
-    public static final String OUTPUT_FOLDER = "\\output";
+    public static final String OUTPUT_FOLDER = "output";
     private static Logger logger = LoggerFactory.getLogger(JsonFileProcessor.class);
 
      private DeelnemerService deelnemerService;
@@ -63,7 +63,7 @@ public class JsonFileProcessor implements FileProcessor {
     private static void moveFile(Path file) {
         try {
             var destinationFolder = Path.of( 
-                file.getParent().toString() + OUTPUT_FOLDER );
+                file.getParent().toString() + File.separator + OUTPUT_FOLDER );
             Files.move(
                 file, 
                 destinationFolder.resolve(file.getFileName()), 
