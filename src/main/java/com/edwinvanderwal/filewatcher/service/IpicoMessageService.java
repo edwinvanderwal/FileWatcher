@@ -1,5 +1,6 @@
 package com.edwinvanderwal.filewatcher.service;
 
+import java.util.LinkedList;
 import java.util.List;
 
 import org.springframework.integration.annotation.MessageEndpoint;
@@ -27,8 +28,10 @@ import lombok.extern.slf4j.Slf4j;
 public class IpicoMessageService {
 
     private DeelnemerService deelnemerService;
-
     private LedBoardService ledBoardService;
+    // Add a cache for the last 20 read items
+    private final List<String> lastReadCache = new LinkedList<>();
+    private static final int CACHE_SIZE = 20;
 
     public IpicoMessageService(DeelnemerService deelnemerService, LedBoardService ledBoardService) {
         this.deelnemerService = deelnemerService;
@@ -37,24 +40,43 @@ public class IpicoMessageService {
 
     @ServiceActivator(inputChannel = "server-channel")
     public void consume(byte[] bytes) {
-        String chipRead = new String(bytes);
-        //logger.info(chipRead);
-        // FIXME startbutton pressed the string is shorter.
+        String chipRead = new String(bytes);   
+        
         if (!chipRead.isEmpty() && chipRead.length() > 16) {
             String chipCode = chipRead.substring(4,16);
-            List<Deelnemer> deelnemers = deelnemerService.getDeelnemerByChipCode(chipCode);
-            //log.info("Deelnemers {} gevonden bij {}", deelnemers.size(), chipCode);
-            if (!deelnemers.isEmpty()) {
-                ledBoardService.handleMessage(deelnemers.get(0).toString());
-                System.out.println(deelnemers.get(0));
-            } else {
-                ledBoardService.handleMessage(chipCode);
-                System.out.println(chipCode);
+
+            if (!getLastReadCache().contains(chipCode)) {
+                List<Deelnemer> deelnemers = deelnemerService.getDeelnemerByChipCode(chipCode);
+                //log.info("Deelnemers {} gevonden bij {}", deelnemers.size(), chipCode);
+                if (!deelnemers.isEmpty()) {
+                    ledBoardService.handleMessage(deelnemers.get(0).toString());
+                    System.out.println(deelnemers.get(0));
+                } else {
+                    ledBoardService.handleMessage(chipCode);
+                    System.out.println(chipCode);
+                }
+                // Add to cache
+                addToCache(chipCode);
             }
         } else {
             ledBoardService.handleMessage("Start button pressed");
         }
+
         
+        
+    }
+
+     // Helper method to maintain a fixed-size cache
+    private synchronized void addToCache(String item) {
+        if (lastReadCache.size() >= CACHE_SIZE) {
+            lastReadCache.remove(0);
+        }
+        lastReadCache.add(item);
+    }
+
+    // Optional: method to get the cache contents
+    public synchronized List<String> getLastReadCache() {
+        return new LinkedList<>(lastReadCache);
     }
 
 }
