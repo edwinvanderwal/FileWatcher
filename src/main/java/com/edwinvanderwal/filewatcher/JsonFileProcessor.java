@@ -3,6 +3,7 @@ package com.edwinvanderwal.filewatcher;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.io.File;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import org.slf4j.Logger;
@@ -17,7 +18,7 @@ import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 
 @Component
 public class JsonFileProcessor implements FileProcessor {
-    public static final String OUTPUT_FOLDER = "\\output";
+    public static final String OUTPUT_FOLDER = "output";
     private static Logger logger = LoggerFactory.getLogger(JsonFileProcessor.class);
 
      private DeelnemerService deelnemerService;
@@ -63,7 +64,7 @@ public class JsonFileProcessor implements FileProcessor {
     private static void moveFile(Path file) {
         try {
             var destinationFolder = Path.of( 
-                file.getParent().toString() + OUTPUT_FOLDER );
+                file.getParent().toString() + File.separator + OUTPUT_FOLDER );
             Files.move(
                 file, 
                 destinationFolder.resolve(file.getFileName()), 

@@ -17,6 +17,9 @@ import lombok.extern.slf4j.Slf4j;
  *         date                                                          240814
  *         time                                                                1913055
  *         checksum? (sum al bits from 2 to 34 ?)                                     def   
+ * 
+ *    See https://stackoverflow.com/questions/56602415/how-to-dynamically-create-multiple-tcpoutboundgateways-using-spring-integration
+ * 
  */ 
 
 @MessageEndpoint
@@ -29,14 +32,15 @@ public class IpicoMessageService {
 
     public IpicoMessageService(DeelnemerService deelnemerService, LedBoardService ledBoardService) {
         this.deelnemerService = deelnemerService;
-        this.ledBoardService = ledBoardService;
+        this.ledBoardService = ledBoardService; 
     }
 
     @ServiceActivator(inputChannel = "server-channel")
     public void consume(byte[] bytes) {
         String chipRead = new String(bytes);
         //logger.info(chipRead);
-        if (!chipRead.isEmpty()) {
+        // FIXME startbutton pressed the string is shorter.
+        if (!chipRead.isEmpty() && chipRead.length() > 16) {
             String chipCode = chipRead.substring(4,16);
             List<Deelnemer> deelnemers = deelnemerService.getDeelnemerByChipCode(chipCode);
             //log.info("Deelnemers {} gevonden bij {}", deelnemers.size(), chipCode);
@@ -45,7 +49,10 @@ public class IpicoMessageService {
                 System.out.println(deelnemers.get(0));
             } else {
                 ledBoardService.handleMessage(chipCode);
+                System.out.println(chipCode);
             }
+        } else {
+            ledBoardService.handleMessage("Start button pressed");
         }
         
     }
