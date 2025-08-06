@@ -3,21 +3,10 @@ package com.edwinvanderwal.filewatcher.config;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.integration.annotation.Gateway;
-import org.springframework.integration.annotation.MessagingGateway;
-import org.springframework.integration.annotation.ServiceActivator;
 import org.springframework.integration.config.EnableIntegration;
-import org.springframework.integration.ip.tcp.TcpOutboundGateway;
 import org.springframework.integration.ip.tcp.TcpReceivingChannelAdapter;
-import org.springframework.integration.ip.tcp.TcpSendingMessageHandler;
-import org.springframework.integration.ip.tcp.connection.AbstractClientConnectionFactory;
-import org.springframework.integration.ip.tcp.connection.AbstractServerConnectionFactory;
 import org.springframework.integration.ip.tcp.connection.TcpNetClientConnectionFactory;
-import org.springframework.integration.ip.tcp.connection.TcpNetServerConnectionFactory;
 import org.springframework.integration.ip.tcp.serializer.ByteArrayLfSerializer;
-import org.springframework.integration.ip.tcp.serializer.ByteArrayRawSerializer;
-import org.springframework.integration.ip.tcp.serializer.ByteArrayStxEtxSerializer;
-
 import lombok.RequiredArgsConstructor;
 
 @Configuration
