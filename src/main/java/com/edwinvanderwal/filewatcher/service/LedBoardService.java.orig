@@ -37,7 +37,10 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class LedBoardService {
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> feature/resillience
     private Socket clientSocket;
     private DataOutputStream out;
     private TcpNetClientRetryConnectionFactory factory;
@@ -46,7 +49,8 @@ public class LedBoardService {
     private String row1 = "";
     private String row2 = "";
 
-    public LedBoardService {
+<<<<<<< HEAD
+    public LedBoardService(final LedBoardConfig ledBoardConfig) {
         try {
             log.info("Connecting to {} and port", ledBoardConfig.getHost(), ledBoardConfig.getPort());
             clientSocket = new Socket(ledBoardConfig.getHost(), ledBoardConfig.getPort());
