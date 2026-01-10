@@ -5,28 +5,12 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
 import java.net.SocketException;
-import java.net.UnknownHostException;
-
 import org.apache.commons.codec.binary.Hex;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.integration.annotation.ServiceActivator;
-import org.springframework.integration.ip.tcp.TcpSendingMessageHandler;
-<<<<<<< HEAD
 import org.springframework.stereotype.Component;
 
-import com.edwinvanderwal.filewatcher.config.LedBoardConfig;
-
-=======
-import org.springframework.integration.ip.tcp.connection.AbstractClientConnectionFactory;
-import org.springframework.stereotype.Component;
-
-import com.edwinvanderwal.filewatcher.config.TcpConfiguration;
 import com.edwinvanderwal.filewatcher.config.TcpNetClientRetryConnectionFactory;
 import com.edwinvanderwal.filewatcher.config.TcpProperties;
 
-import lombok.RequiredArgsConstructor;
->>>>>>> feature/resillience
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -46,25 +30,11 @@ public class LedBoardService {
     private String row1 = "";
     private String row2 = "";
 
-    public LedBoardService {
-        try {
-            log.info("Connecting to {} and port", ledBoardConfig.getHost(), ledBoardConfig.getPort());
-            clientSocket = new Socket(ledBoardConfig.getHost(), ledBoardConfig.getPort());
-            out = new DataOutputStream(clientSocket.getOutputStream());
-            handleMessage("Welkom hardlopers!");
-        } catch (UnknownHostException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        } catch (IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-=======
     public LedBoardService(final TcpProperties tcpProperties) {
         if (!tcpProperties.isSimulation()){
             factory = new TcpNetClientRetryConnectionFactory(tcpProperties);
             connectToSocket();
             handleMessage(tcpProperties.getWelcomeMessage());
->>>>>>> feature/resillience
         }
     }
 
