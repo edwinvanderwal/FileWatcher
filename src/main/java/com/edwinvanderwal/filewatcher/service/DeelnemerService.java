@@ -7,8 +7,8 @@ import org.springframework.cache.annotation.CachePut;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.edwinvanderwal.filewatcher.Deelnemer;
-import com.edwinvanderwal.filewatcher.DeelnemerRepo;
+import com.edwinvanderwal.filewatcher.model.Deelnemer;
+import com.edwinvanderwal.filewatcher.repository.DeelnemerRepo;
 
 @Component
 public class DeelnemerService {

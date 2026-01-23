@@ -14,9 +14,9 @@ import org.springframework.boot.devtools.filewatch.FileSystemWatcher;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import com.edwinvanderwal.filewatcher.CustomerAddFileChangeListener;
-import com.edwinvanderwal.filewatcher.FileWatcherProperties;
-import com.edwinvanderwal.filewatcher.JsonFileProcessor;
+import com.edwinvanderwal.filewatcher.file.CustomerAddFileChangeListener;
+import com.edwinvanderwal.filewatcher.file.FileWatcherProperties;
+import com.edwinvanderwal.filewatcher.file.JsonFileProcessor;
 
 import jakarta.annotation.PreDestroy;
 
@@ -51,10 +51,18 @@ public class CustomerFileWatcherConfig {
         logger.info(String.format("FileSystemWatcher initialized.Monitoring directory %s",properties.directory()));
         if (Files.exists(Paths.get(properties.directory(),"Deelnemers.json"))) {
             System.out.println("alread a file!!!");
-            fileProcessor.process(Paths.get(properties.directory(), "Deelnemers.json"));
+            fileProcessor.processDeelnemers(Paths.get(properties.directory(), "Deelnemers.json"));
         } else if (Files.exists(Paths.get(properties.directory() , "output" , "Deelnemers.json"))) {
             System.out.println("alread a file in output folder!!!");
-            fileProcessor.process(Paths.get(properties.directory() , "output" , "Deelnemers.json"));
+            fileProcessor.processDeelnemers(Paths.get(properties.directory() , "output" , "Deelnemers.json"));
+        } 
+        
+        if (Files.exists(Paths.get(properties.directory(),"Tagmap.txt"))) {
+            System.out.println("alread a file!!!");
+            fileProcessor.processTagMap(Paths.get(properties.directory(), "Tagmap.txt"));
+        } else if (Files.exists(Paths.get(properties.directory() , "output" , "Tagmap.txt"))) {
+            System.out.println("alread a file in output folder!!!");
+            fileProcessor.processTagMap(Paths.get(properties.directory() , "output" , "Tagmap.txt"));
         } else {
             System.out.println("no init file!!!");
         }

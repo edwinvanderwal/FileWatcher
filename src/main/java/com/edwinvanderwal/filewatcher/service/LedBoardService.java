@@ -35,6 +35,8 @@ public class LedBoardService {
             factory = new TcpNetClientRetryConnectionFactory(tcpProperties);
             connectToSocket();
             handleMessage(tcpProperties.getWelcomeMessage());
+        } else {
+            System.out.println(tcpProperties.getWelcomeMessage());
         }
     }
 

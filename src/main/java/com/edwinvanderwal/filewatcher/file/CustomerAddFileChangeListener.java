@@ -1,4 +1,4 @@
-package com.edwinvanderwal.filewatcher;
+package com.edwinvanderwal.filewatcher.file;
 
 import java.util.Set;
 
@@ -27,8 +27,15 @@ public class CustomerAddFileChangeListener implements FileChangeListener {
         for(ChangedFiles files : changeSet)
             for(ChangedFile file: files.getFiles()) {
                 logger.info("{} {}", file.getFile().getAbsolutePath() , file.getType());
-                if (file.getType().equals(ChangedFile.Type.ADD) && !file.getFile().getAbsolutePath().contains("output"))
-                    fileProcessor.process(file.getFile().toPath());
+                if (file.getType().equals(ChangedFile.Type.ADD) && !file.getFile().getAbsolutePath().contains("output")) {
+                    if (file.getFile().getName().toLowerCase().startsWith("deelnemers")) {
+                        fileProcessor.processDeelnemers(file.getFile().toPath());
+                    } else if (file.getFile().getName().toLowerCase().startsWith("tagmap")) {
+                        fileProcessor.processTagMap(file.getFile().toPath());
+                    
+                }
+                    
             }
+        }
     }
 }
