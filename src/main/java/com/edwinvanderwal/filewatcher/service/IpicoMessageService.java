@@ -56,7 +56,7 @@ public class IpicoMessageService {
                     System.out.println(deelnemers.get(0));
                 } else {
                     List<Startnummer> startnummers = tagmapService.getStartnummerByChipCode(chipCode);
-                    ledBoardService.handleMessage(startnummers.isEmpty() ? "Unknown chipcode " + chipCode : "Startnummer " + startnummers.get(0).toString());
+                    ledBoardService.handleMessage(startnummers.isEmpty() ? "Unknown chipcode " + chipCode : "Startnummer " + startnummers.get(0).getNummer());
                     System.out.println(startnummers.isEmpty() ? "Unknown chipcode " + chipCode : "Startnummer " + startnummers.get(0).getNummer());
                 }
                 // Add to cache
