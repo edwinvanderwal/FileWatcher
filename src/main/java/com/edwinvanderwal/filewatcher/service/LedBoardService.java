@@ -45,7 +45,6 @@ public class LedBoardService {
     private void connectToSocket() {
         try {
             clientSocket = factory.getSocket();
-	    B
             out = new DataOutputStream(clientSocket.getOutputStream());
             log.info("Connected to the socket successfully.");
         } catch (IOException e) {
