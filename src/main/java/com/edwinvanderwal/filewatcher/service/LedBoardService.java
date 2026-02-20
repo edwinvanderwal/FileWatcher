@@ -30,17 +30,22 @@ public class LedBoardService {
     private String row1 = "";
     private String row2 = "";
 
-    public LedBoardService(final TcpProperties tcpProperties) {
+
+     public LedBoardService(final TcpProperties tcpProperties) {
         if (!tcpProperties.isSimulation()){
             factory = new TcpNetClientRetryConnectionFactory(tcpProperties);
             connectToSocket();
             handleMessage(tcpProperties.getWelcomeMessage());
+        } else {
+            System.out.println(tcpProperties.getWelcomeMessage());
+
         }
     }
 
     private void connectToSocket() {
         try {
             clientSocket = factory.getSocket();
+	    B
             out = new DataOutputStream(clientSocket.getOutputStream());
             log.info("Connected to the socket successfully.");
         } catch (IOException e) {
