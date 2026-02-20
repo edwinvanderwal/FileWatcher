@@ -5,10 +5,17 @@
     <title>fragments</title>
 </head>
 <body>
-<div id="search-results" th:fragment="results">
-    <ul th:each="result: ${results}">
-        <li th:text="${result}"></li>
-    </ul>
-</div>
+<table id="search-results" th:fragment="results">
+    <thead>
+        <tr>
+            <th>Startnummer</th>
+            <th>Naam</th>
+            <th>Medaille</th>
+            <th>Onderdeel</th>
+    </tr>
+    <tr th:each="result: ${results}">
+        <td th:text="${result.startnummer}"></td><td th:text="${result.naam}"></td><td th:text="${result.medailleString}"></td><td th:text="${result.onderdeel}"></td>
+    </tr>
+</table>
 </body>
 </html>

@@ -24,10 +24,25 @@ public class Deelnemer {
     private String vereniging;
     private String woonplaats;
     private String onderdeel;
+    private String extra;
     
     @Override
     public String toString() {
         return "" + startnummer + "" + naam + " " + vereniging + " " + woonplaats + " " + onderdeel + "";
+    }
+
+    public String getMedailleString() {
+        if (extra == null) {
+            return "";
+        }
+        if (extra.contains("B")) {
+            return "🥇 Gouden Leeuw";
+        } else if (extra.contains("C")) {
+            return "🥈 Gewone medaille";
+        } else if (extra.contains("M")) {
+            return "🥉 Gewone medaille";
+        }
+        return "";
     }
 
 }
