@@ -1,4 +1,4 @@
-package com.edwinvanderwal.filewatcher;
+package com.edwinvanderwal.filewatcher.file;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 

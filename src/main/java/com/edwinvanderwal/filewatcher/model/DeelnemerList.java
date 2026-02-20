@@ -1,4 +1,4 @@
-package com.edwinvanderwal.filewatcher;
+package com.edwinvanderwal.filewatcher.model;
 
 import java.util.List;
 

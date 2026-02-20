@@ -6,7 +6,8 @@ import java.util.List;
 import org.springframework.integration.annotation.MessageEndpoint;
 import org.springframework.integration.annotation.ServiceActivator;
 
-import com.edwinvanderwal.filewatcher.Deelnemer;
+import com.edwinvanderwal.filewatcher.model.Deelnemer;
+import com.edwinvanderwal.filewatcher.model.Startnummer;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -29,13 +30,15 @@ public class IpicoMessageService {
 
     private DeelnemerService deelnemerService;
     private LedBoardService ledBoardService;
+    private TagmapService tagmapService;
     // Add a cache for the last 20 read items
     private final List<String> lastReadCache = new LinkedList<>();
     private static final int CACHE_SIZE = 20;
 
-    public IpicoMessageService(DeelnemerService deelnemerService, LedBoardService ledBoardService) {
+    public IpicoMessageService(DeelnemerService deelnemerService, LedBoardService ledBoardService, TagmapService tagmapService) {
         this.deelnemerService = deelnemerService;
         this.ledBoardService = ledBoardService; 
+        this.tagmapService = tagmapService;
     }
 
     @ServiceActivator(inputChannel = "server-channel")
@@ -52,8 +55,9 @@ public class IpicoMessageService {
                     ledBoardService.handleMessage(deelnemers.get(0).toString());
                     System.out.println(deelnemers.get(0));
                 } else {
-                    ledBoardService.handleMessage(chipCode);
-                    System.out.println(chipCode);
+                    List<Startnummer> startnummers = tagmapService.getStartnummerByChipCode(chipCode);
+                    ledBoardService.handleMessage(startnummers.isEmpty() ? "Unknown chipcode " + chipCode : "Startnummer " + startnummers.get(0).getNummer());
+                    System.out.println(startnummers.isEmpty() ? "Unknown chipcode " + chipCode : "Startnummer " + startnummers.get(0).getNummer());
                 }
                 // Add to cache
                 addToCache(chipCode);
