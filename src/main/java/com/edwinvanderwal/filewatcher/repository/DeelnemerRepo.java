@@ -12,4 +12,6 @@ public interface DeelnemerRepo extends JpaRepository<Deelnemer, Long> {
 
     List<Deelnemer> findByChipcodeIgnoreCase(String chipcode);
 
+    List<Deelnemer> findByStartnummerIgnoreCase(String startnummer);
+
 }

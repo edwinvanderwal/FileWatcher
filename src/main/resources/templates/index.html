@@ -12,27 +12,26 @@
 <body>
     <main class="container">
         <section>
-        <h1>Htmx Demo</h1>
-        <div id="parent-div"></div>
-        <!-- <button hx-post="/clicked"
-                hx-trigger="click"
-                hx-target="#parent-div"
-                hx-swap="outerHTML">
-            Click Me!
-        </button>
+            <h1>Htmx Demo</h1>
+            <div id="parent-div"></div>
         </section>
-
-        <section>
-            <input type="text"
-                   name="q"
-                   hx-get="/search"
-                   hx-trigger="keyup changed delay:500ms"
-                   hx-target="#search-results"
-                   placeholder="Search..."
-            >
-            <div th:replace="search::results">
-            </div> -->
-        </section>
+        <input class="form-control" type="search"
+            name="search" placeholder="Begin Typing To Search Users..."
+            hx-post="/search"
+            hx-trigger="input changed delay:500ms, keyup[key=='Enter'], load"
+            hx-target="#search-results"
+            hx-indicator=".htmx-indicator">
+        <table class="table">
+            <thead>
+            <tr>
+            <th>First Name</th>
+            <th>Last Name</th>
+            <th>Email</th>
+            </tr>
+            </thead>
+            <tbody id="search-results">
+            </tbody>
+    </table>
 
     </main>
 </body>

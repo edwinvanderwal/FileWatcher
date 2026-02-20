@@ -30,8 +30,7 @@ public class LedBoardService {
     private String row1 = "";
     private String row2 = "";
 
-
-     public LedBoardService(final TcpProperties tcpProperties) {
+    public LedBoardService(final TcpProperties tcpProperties) {
         if (!tcpProperties.isSimulation()){
             factory = new TcpNetClientRetryConnectionFactory(tcpProperties);
             connectToSocket();

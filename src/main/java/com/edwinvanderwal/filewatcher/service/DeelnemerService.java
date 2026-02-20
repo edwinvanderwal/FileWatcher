@@ -9,7 +9,6 @@ import org.springframework.cache.annotation.CachePut;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.edwinvanderwal.filewatcher.file.JsonFileProcessor;
 import com.edwinvanderwal.filewatcher.model.Deelnemer;
 import com.edwinvanderwal.filewatcher.repository.DeelnemerRepo;
 
@@ -37,6 +36,10 @@ public class DeelnemerService {
 
     public List<Deelnemer> getDeelnemerByChipCode(String chipcode) {
         return deelnemerRepo.findByChipcodeIgnoreCase(chipcode);
+    }
+
+    public List<Deelnemer> getDeelnemerByStartnummer(String startnummer) {
+        return deelnemerRepo.findByStartnummerIgnoreCase(startnummer);
     }
 
 }
