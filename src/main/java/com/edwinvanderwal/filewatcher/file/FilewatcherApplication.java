@@ -11,7 +11,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 				"com.edwinvanderwal.filewatcher"				 
 				 })
 @EnableJpaRepositories("com.edwinvanderwal.filewatcher.repository")
- @EntityScan("com.edwinvanderwal.filewatcher.model")   
+@EntityScan("com.edwinvanderwal.filewatcher.model")   
 public class FilewatcherApplication {
 
 	public static void main(String[] args) {

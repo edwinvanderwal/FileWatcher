@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <title>fragments</title>
+</head>
+<body>
+<h1>Alle registraties</h1>
+<table id="all-results" th:fragment="registrations">
+    <thead>
+        <tr>
+            <th>Startnummer</th>
+            <th>Naam</th>
+            <th>Onderdeel</th>
+             <th>Medaille</th>
+    </tr>
+    <tr th:each="registration: ${registrations}">
+        <td th:text="${registration.deelnemer.startnummer}"></td><td th:text="${registration.deelnemer.naam}"></td><td th:text="${registration.deelnemer.onderdeel}"></td><td th:text="${registration.deelnemer.medailleString}"></td>
+    </tr>
+</table>
+</body>
+</html>

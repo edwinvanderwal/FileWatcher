@@ -24,7 +24,18 @@
         <table class="table">
             <tbody id="search-results">
             </tbody>
-    </table>
+        </table>
+        <button class="button is-success"
+            name="all"
+            type="submit"
+            hx-post="/all"
+            hx-target="#all-results"
+            hx-trigger="every 5s"                                                                             
+            >Laatste finishers</button>
+        <table class="table">
+            <tbody id="all-results">
+            </tbody>
+        </table>
 
     </main>
 </body>

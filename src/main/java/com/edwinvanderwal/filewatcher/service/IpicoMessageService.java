@@ -1,5 +1,7 @@
 package com.edwinvanderwal.filewatcher.service;
 
+import java.sql.Date;
+import java.time.LocalDateTime;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -7,6 +9,7 @@ import org.springframework.integration.annotation.MessageEndpoint;
 import org.springframework.integration.annotation.ServiceActivator;
 
 import com.edwinvanderwal.filewatcher.model.Deelnemer;
+import com.edwinvanderwal.filewatcher.model.Registration;
 import com.edwinvanderwal.filewatcher.model.Startnummer;
 
 import lombok.extern.slf4j.Slf4j;
@@ -31,14 +34,16 @@ public class IpicoMessageService {
     private DeelnemerService deelnemerService;
     private LedBoardService ledBoardService;
     private TagmapService tagmapService;
+    private RegistrationService registrationService;
     // Add a cache for the last 20 read items
     private final List<String> lastReadCache = new LinkedList<>();
     private static final int CACHE_SIZE = 20;
 
-    public IpicoMessageService(DeelnemerService deelnemerService, LedBoardService ledBoardService, TagmapService tagmapService) {
+    public IpicoMessageService(DeelnemerService deelnemerService, LedBoardService ledBoardService, TagmapService tagmapService, RegistrationService registrationService) {
         this.deelnemerService = deelnemerService;
         this.ledBoardService = ledBoardService; 
         this.tagmapService = tagmapService;
+        this.registrationService = registrationService;
     }
 
     @ServiceActivator(inputChannel = "server-channel")
@@ -53,6 +58,10 @@ public class IpicoMessageService {
                 //log.info("Deelnemers {} gevonden bij {}", deelnemers.size(), chipCode);
                 if (!deelnemers.isEmpty()) {
                     ledBoardService.handleMessage(deelnemers.get(0).toString());
+                    Registration registration = new Registration();
+                    registration.setDeelnemer(deelnemers.get(0));
+                    registration.setRegistrationTime(LocalDateTime.now());
+                    registrationService.save(registration);
                     System.out.println(deelnemers.get(0));
                 } else {
                     List<Startnummer> startnummers = tagmapService.getStartnummerByChipCode(chipCode);
