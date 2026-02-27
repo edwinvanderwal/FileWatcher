@@ -35,7 +35,7 @@ public class TcpNetClientRetryConnectionFactory extends TcpNetClientConnectionFa
 		try {
 			socket = super.createSocket(host, port);
 		} catch (Exception e) {
-			log.warn("retrying connection");
+			log.warn("retrying connection host{}, port{}", host, port);
 
 			try {
 				Thread.sleep(tcpProperties.getConnectionRetryInterval());
