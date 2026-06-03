@@ -46,7 +46,7 @@ public class TcpNetClientRetryConnectionFactory extends TcpNetClientConnectionFa
 			socket = this.createSocket(host, port);
 		}
 
-		log.debug("connection established");
+		log.info("Connected to the socket successfully with IP {} and my Own IP address is {}.", socket.getInetAddress(), socket.getLocalAddress());
 		return socket;
 	}
 

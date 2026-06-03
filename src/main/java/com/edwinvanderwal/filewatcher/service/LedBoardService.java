@@ -46,7 +46,7 @@ public class LedBoardService {
         try {
             clientSocket = factory.getSocket();
             out = new DataOutputStream(clientSocket.getOutputStream());
-            log.info("Connected to the socket successfully.");
+            log.info("Connected to the socket successfully with IP {} and my Own IP address is {}.", clientSocket.getInetAddress(), clientSocket.getLocalAddress());
         } catch (IOException e) {
             log.error("Failed to connect to the socket: {}", e.getMessage());
             retryConnection();
