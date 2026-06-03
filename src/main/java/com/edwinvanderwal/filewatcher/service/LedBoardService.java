@@ -37,7 +37,7 @@ public class LedBoardService {
             handleMessage(tcpProperties.getWelcomeMessage());
             sendLionitasLogo();
         } else {
-            System.out.println(tcpProperties.getWelcomeMessage());
+            log.info(tcpProperties.getWelcomeMessage());
 
         }
     }
