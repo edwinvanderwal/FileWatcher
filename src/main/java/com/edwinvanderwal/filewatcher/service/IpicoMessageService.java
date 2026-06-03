@@ -52,26 +52,31 @@ public class IpicoMessageService {
         
         if (!chipRead.isEmpty() && chipRead.length() > 16) {
             String chipCode = chipRead.substring(4,16);
-
-            if (!getLastReadCache().contains(chipCode)) {
-                List<Deelnemer> deelnemers = deelnemerService.getDeelnemerByChipCode(chipCode);
-                //log.info("Deelnemers {} gevonden bij {}", deelnemers.size(), chipCode);
-                if (!deelnemers.isEmpty()) {
-                    ledBoardService.handleMessage(deelnemers.get(0).toString());
-                    Registration registration = new Registration();
-                    registration.setDeelnemer(deelnemers.get(0));
-                    registration.setRegistrationTime(LocalDateTime.now());
-                    registrationService.save(registration);
-                    System.out.println(deelnemers.get(0));
-                } else {
-                    List<Startnummer> startnummers = tagmapService.getStartnummerByChipCode(chipCode);
-                    ledBoardService.handleMessage(startnummers.isEmpty() ? "Unknown chipcode " + chipCode : "Startnummer " + startnummers.get(0).getNummer());
-                    System.out.println(startnummers.isEmpty() ? "Unknown chipcode " + chipCode : "Startnummer " + startnummers.get(0).getNummer());
-                }
-                // Add to cache
-                addToCache(chipCode);
-            }
+            if (chipRead.startsWith("ab")) {
+                ledBoardService.handleMessage("Start button pressed"); 
+                 System.out.println("Start button pressed");
+            } else {
+                if (!getLastReadCache().contains(chipCode)) {
+                    List<Deelnemer> deelnemers = deelnemerService.getDeelnemerByChipCode(chipCode);
+                    //log.info("Deelnemers {} gevonden bij {}", deelnemers.size(), chipCode);
+                    if (!deelnemers.isEmpty()) {
+                        ledBoardService.handleMessage(deelnemers.get(0).toString());
+                        Registration registration = new Registration();
+                        registration.setDeelnemer(deelnemers.get(0));
+                        registration.setRegistrationTime(LocalDateTime.now());
+                        registrationService.save(registration);
+                        System.out.println(deelnemers.get(0));
+                    } else {
+                        List<Startnummer> startnummers = tagmapService.getStartnummerByChipCode(chipCode);
+                        ledBoardService.handleMessage(startnummers.isEmpty() ? "Unknown chipcode " + chipCode : "Startnummer " + startnummers.get(0).getNummer());
+                        System.out.println(startnummers.isEmpty() ? "Unknown chipcode " + chipCode : "Startnummer " + startnummers.get(0).getNummer());
+                    }
+                    // Add to cache
+                    addToCache(chipCode);
+                } 
+            }   
         } else {
+            System.out.println("Start button pressed");
             ledBoardService.handleMessage("Start button pressed");
         }
 
