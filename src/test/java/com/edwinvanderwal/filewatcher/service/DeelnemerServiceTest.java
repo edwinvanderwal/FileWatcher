@@ -89,4 +89,15 @@ class DeelnemerServiceTest {
 
         assertEquals((byte)0x48, sum);
     }
+
+    @Test
+    void testBytes() {
+        int width = 128;
+        byte xLow = (byte) (0x80);
+         byte xHigh = (byte) ((width >> 8) & 0xFF);
+        System.out.println("xLsow: " + xLow);
+        System.out.println("xHigh: " + xHigh);
+    }
+
+
 }
