@@ -6,7 +6,8 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
 import java.net.SocketException;
-import org.apache.commons.codec.binary.Hex;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.edwinvanderwal.filewatcher.config.TcpNetClientRetryConnectionFactory;
@@ -22,7 +23,6 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class LedBoardService {
 
-
     private Socket clientSocket;
     private DataOutputStream out;
     private TcpNetClientRetryConnectionFactory factory;
@@ -31,15 +31,19 @@ public class LedBoardService {
     private String row1 = "";
     private String row2 = "";
 
+    @Autowired
     public LedBoardService(final TcpProperties tcpProperties) {
+         this(tcpProperties, null);
+    }
+
+    LedBoardService(final TcpProperties tcpProperties, final TcpNetClientRetryConnectionFactory factory) {
         if (!tcpProperties.isSimulation()){
-            factory = new TcpNetClientRetryConnectionFactory(tcpProperties);
+            this.factory = factory != null ? factory : new TcpNetClientRetryConnectionFactory(tcpProperties);
             connectToSocket();
             handleMessage(tcpProperties.getWelcomeMessage());
             sendLionitasLogo();
         } else {
             log.info(tcpProperties.getWelcomeMessage());
-
         }
     }
 
@@ -99,7 +103,7 @@ public class LedBoardService {
         }
     }
 
-    public byte[] handleMessage(String msg) {
+    public void handleMessage(String msg) {
         try {
             if (out != null) {
                 // set rows down
@@ -122,7 +126,6 @@ public class LedBoardService {
         } catch (IOException e) {
             log.error("IOException occurred: {}", e.getMessage());
         }
-        return null;
     }
 
     private byte[] createByteArray(boolean reset, int rijnummer, String messageString) throws IOException {
@@ -201,8 +204,7 @@ public class LedBoardService {
         outputStream.write( byteArray );
         outputStream.write( checkSumByte );
 
-        byte[] c = outputStream.toByteArray( );
-        return c;
+       return outputStream.toByteArray( );
     }
 
 
@@ -217,29 +219,6 @@ public class LedBoardService {
         //System.out.println("sum " + sum );
         byte[] checkSumBute = {sum};
         return checkSumBute;
-    }
-
-
-    /**
-     * 7-bit checksum executed for the whole frame:
-0x1B+0x40+0x53+0x5A+0x30+0x02+0x4D+0x49+0
-x43+0x52+0x4F+0x47+0x41+0x54+0x45+0x03 = 
-0x3D8
-0x3D8 AND 0x7F = 0x58 
-     
-     */
-    public static int calculateChecksum(String test) {
-        byte[] bytes = test.getBytes();
-        byte bit7 = (byte) 0x7F;
-        byte sum = 0;
-        System.out.println("hexadecimaal " + Hex.encodeHexString( bytes ) );
-        for (int i = 0; i < bytes.length; i++) {   
-            sum += bytes[i];
-        }
-        System.out.println("sum " + sum );
-        sum = (byte) (sum & bit7);
-        System.out.println("sum " + sum );
-        return sum ;
     }
 
     // Send the bundled LIONITAS logo bitmap to the ledboard
@@ -262,6 +241,12 @@ x43+0x52+0x4F+0x47+0x41+0x54+0x45+0x03 =
         }
     }
 
+    /**
+     * The ledboard expects the bitmap data to be sent in a specific order. This method converts the bitmap from a linear array to the required format.
+     * Ledboard expects all bits of the first column, then all bits of the second column, and so on. The bitmap is 128x32 pixels, which means it has 128 columns and 32 rows. Each byte in the bitmap represents 8 vertical pixels (1 bit per pixel). The method rearranges the bytes accordingly.
+     * @param bitmap
+     * @return
+     */
     private byte[] convertBitmapToByteArray(byte[] bitmap) {
         byte[] byteArray = new byte[bitmap.length];
         for (int i = 0; i < 128; i++) {   
