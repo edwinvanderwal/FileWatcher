@@ -54,15 +54,18 @@ public class JsonFileProcessor implements FileProcessor {
      @Override
     public void processTagMap(Path file) {
         logger.info(String.format("Init processing file %s", file.getFileName()));
+        int lineCount = 0;
         try (Scanner scanner = new Scanner(file)) {
              while (scanner.hasNextLine()) {
                 String line = scanner.nextLine();
                 parseTagmap(line);
+                lineCount++;
              }
         } catch (IOException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
+        logger.info(String.format("Processed %d lines from file %s", lineCount, file.getFileName()));
         moveFile(file);
     }
 
