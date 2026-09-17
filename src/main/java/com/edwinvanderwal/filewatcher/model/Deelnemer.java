@@ -25,6 +25,7 @@ public class Deelnemer {
     private String woonplaats;
     private String onderdeel;
     private String extra;
+    private String categorie;
     
     @Override
     public String toString() {

@@ -12,10 +12,11 @@
             <th>Startnummer</th>
             <th>Naam</th>
             <th>Onderdeel</th>
-             <th>Medaille</th>
+            <th>Categorie</th>
+           <!-- <th>Medaille</th>-->
     </tr>
     <tr th:each="registration: ${registrations}">
-        <td th:text="${registration.deelnemer.startnummer}"></td><td th:text="${registration.deelnemer.naam}"></td><td th:text="${registration.deelnemer.onderdeel}"></td><td th:text="${registration.deelnemer.medailleString}"></td>
+        <td th:text="${registration.deelnemer.startnummer}"></td><td th:text="${registration.deelnemer.naam}"></td><td th:text="${registration.deelnemer.onderdeel}"></td><td th:text="${registration.deelnemer.categorie}"></td><!--<td th:text="${registration.deelnemer.medailleString}"--></td>
     </tr>
 </table>
 </body>
